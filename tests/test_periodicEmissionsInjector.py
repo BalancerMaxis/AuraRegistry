@@ -48,12 +48,13 @@ def testAddAll(deploy, booster):
         except:
             print("f")
     assert (deploy.poolList("0x0312AA8D0BA4a1969Fddb382235870bF55f7f242")[1] == 1)
-
+    counter = 0
     for i in range(topPid):
         try:
-            deploy.updatePidForGauge(i)
+            deploy.updatePidForGauge(i, booster.poolInfo(i)[2])
         except:
-            print("f")
+            print("Number of fails" + str(counter))
+            counter = counter + 1
 
     assert False
 # def test_addManyPools(deploy, booster):
