@@ -22,13 +22,8 @@ import "./../interfaces/IBooster.sol";
  */
 contract gaugeRegistry {
 
-    IMainnetGaugeFactory factory = IMainnetGaugeFactory(0xf1665E19bc105BE4EDD3739F88315cC699cc5b65);
-    IGaugeController controller = IGaugeController(0xC128468b7Ce63eA702C1f104D55A2566b13D3ABD);
-    IMainnetGaugeFactory oldFactory = IMainnetGaugeFactory(0x4E7bBd911cf1EFa442BC1b2e9Ea01ffE785412EC);
     IBooster booster = IBooster(0xA57b8d98dAE62B26Ec3bcC4a365338157060B234);
 
-    // all aura pids below 46 have been killed
-    uint8 public floorMinimum = 46;
 
     struct gaugeDetails {
         address lpToken;
@@ -82,10 +77,8 @@ contract gaugeRegistry {
         }
     }
 
-    //iterate through all pids
-    // maybe take in lower and upper bounds of pids to search
-    // start at pid 0, get gauge, check against poolList(gauge) and check if pid is higher than whats in list
-    // if so, return that gauge (and pid?) for updating
+    // view function to iterate through all pids and see if the derived gauge is stored in poolList
+    // then check if the poolList[gauge] needs its pid updated to a higher value
     function validateList(uint8 lowerBound, uint8 upperBound) public view returns (needUpdate[] memory) {
 
         needUpdate[] memory badGauges = new needUpdate[](upperBound - lowerBound);
