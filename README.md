@@ -25,6 +25,8 @@ The contract makes the assumption that if there are two separate pids for the sa
 
 `getPidFromGauge(gauge)` looks up gauge in poolList and returns the pid
 
+`removeShutdownGauge(pid)` removes the mapping in poolList if booster.poolInfo(pid).shutdown ==true and supplied pid matches the stored pid 
+
 Some notes:
 * Upon deployment, someone will have to populate poolList with all the gauges.  
 

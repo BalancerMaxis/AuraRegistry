@@ -41,13 +41,15 @@ def test_addGauge(deploy, booster):
 
 
 def testAddAll(deploy, booster):
-    topPid = 102
+    # -10 is to test new additions
+    topPid = booster.poolLength() - 10
     for i in range(topPid):
         try:
             deploy.addGauge(i)
         except:
-            print("f")
+            print("failed to add gauge at" + str(i))
     assert (deploy.poolList("0x0312AA8D0BA4a1969Fddb382235870bF55f7f242")[1] == 1)
+
     counter = 0
     for i in range(topPid):
         try:

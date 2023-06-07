@@ -17,8 +17,8 @@ import "./../interfaces/IBooster.sol";
  * @title Aura Registry
  * @author mike b
  * @notice registry for aura booster to get pid by gauge
- * @notice
- * see https://docs.chain.link/chainlink-automation/utility-contracts/
+ * @notice allows anyone to call addgauge to add the gauge to poolList
+ * @notice if there exists a gauge for which there is a corresponding pid that is higher than stored, you can call updatePidForGauge
  */
 contract gaugeRegistry {
 
@@ -78,6 +78,8 @@ contract gaugeRegistry {
         booster.poolInfo(pid).gauge == booster.poolInfo(poolList[gauge].pid).gauge
         ) {
             poolList[gauge] = gaugeDetails(booster.poolInfo(pid).lptoken, pid );
+        } else {
+            revert("unable to update pid");
         }
     }
 
@@ -114,6 +116,13 @@ contract gaugeRegistry {
     function updateManyGauges(needUpdate[] memory list) public {
         for (uint8 idx = 0; idx < list.length; idx++) {
             updatePidForGauge(list[idx].pid,list[idx].gauge);
+        }
+    }
+
+    function removeShutdownGauge(uint8 pid) public {
+        if(booster.poolInfo(pid).shutdown==true &&
+        poolList[booster.poolInfo(pid).gauge].pid == pid ){
+            poolList[booster.poolInfo(pid).gauge] = gaugeDetails(0x0000000000000000000000000000000000000000,0);
         }
     }
 
