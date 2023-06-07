@@ -30,7 +30,7 @@ The contract makes the assumption that if there are two separate pids for the sa
 Some notes:
 * Upon deployment, someone will have to populate poolList with all the gauges.  
 
-* validateList upper bound must not be more than the max pid of the booster
+* validateList upper bound must not be more than the max pid of the booster (booster.poolLength())
 
 * line 56 (which checks if a pid has been shutdown) has been edited out for testing purposes
 
