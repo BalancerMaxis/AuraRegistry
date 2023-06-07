@@ -10,8 +10,6 @@ ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
 def test_deploy(deploy):
     return
 
-def testOutput(deploy):
-    assert deploy.getNumber1() == 1
 
 
 def test_getLPFromPid(deploy):

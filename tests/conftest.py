@@ -35,7 +35,7 @@ def injector(deploy):
 
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def deploy(deployer):
     """
     Deploys, vault and test strategy, mock token and wires them up.
