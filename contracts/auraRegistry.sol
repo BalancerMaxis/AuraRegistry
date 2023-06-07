@@ -123,6 +123,8 @@ contract gaugeRegistry {
         if(booster.poolInfo(pid).shutdown==true &&
         poolList[booster.poolInfo(pid).gauge].pid == pid ){
             poolList[booster.poolInfo(pid).gauge] = gaugeDetails(0x0000000000000000000000000000000000000000,0);
+        } else {
+            revert("gauge not shutdown or pid doesn't match");
         }
     }
 
