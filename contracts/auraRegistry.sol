@@ -20,21 +20,21 @@ contract gaugeRegistry {
     IBooster booster = IBooster(0xA57b8d98dAE62B26Ec3bcC4a365338157060B234);
 
 
-    struct gaugeDetails {
+    struct GaugeDetails {
         address lpToken;
         uint8 pid;
     }
 
-    struct needUpdate {
+    struct NeedUpdate {
         address gauge;
         uint8 pid;
     }
 
-    mapping(address => gaugeDetails) public poolList;
+    mapping(address => GaugeDetails) public poolList;
     address[] public gaugeList;
 
-    //    function getPoolInfo(uint8 pid) internal returns (gaugeDetails memory){
-    //        return gaugeDetails(booster.poolInfo(pid).lptoken,booster.poolInfo(pid).gauge;
+    //    function getPoolInfo(uint8 pid) internal returns (GaugeDetails memory){
+    //        return GaugeDetails(booster.poolInfo(pid).lptoken,booster.poolInfo(pid).gauge;
     //    }
     //
     function getLPFromPid(uint8 pid) public view returns (address){
@@ -56,7 +56,7 @@ contract gaugeRegistry {
         ){
             revert("pool already exists for gauge");
         }
-        poolList[booster.poolInfo(pid).gauge] = gaugeDetails(booster.poolInfo(pid).lptoken, pid);
+        poolList[booster.poolInfo(pid).gauge] = GaugeDetails(booster.poolInfo(pid).lptoken, pid);
         gaugeList.push(booster.poolInfo(pid).gauge);
     }
 
@@ -72,7 +72,7 @@ contract gaugeRegistry {
         gauge == booster.poolInfo(poolList[gauge].pid).gauge &&
         booster.poolInfo(pid).gauge == booster.poolInfo(poolList[gauge].pid).gauge
         ) {
-            poolList[gauge] = gaugeDetails(booster.poolInfo(pid).lptoken, pid );
+            poolList[gauge] = GaugeDetails(booster.poolInfo(pid).lptoken, pid );
         } else {
             revert("unable to update pid");
         }
@@ -80,9 +80,9 @@ contract gaugeRegistry {
 
     // view function to iterate through all pids and see if the derived gauge is stored in poolList
     // then check if the poolList[gauge] needs its pid updated to a higher value
-    function validateList(uint8 lowerBound, uint8 upperBound) public view returns (needUpdate[] memory) {
+    function validateList(uint8 lowerBound, uint8 upperBound) public view returns (NeedUpdate[] memory) {
 
-        needUpdate[] memory badGauges = new needUpdate[](upperBound - lowerBound);
+        NeedUpdate[] memory badGauges = new NeedUpdate[](upperBound - lowerBound);
         uint256 counter = 0;
 
         for (uint8 idx = lowerBound; idx < upperBound; idx++) {
@@ -90,7 +90,7 @@ contract gaugeRegistry {
             if (idx > poolList[booster.poolInfo(idx).gauge].pid &&
             poolList[booster.poolInfo(idx).gauge].pid != 0)
             {
-                needUpdate memory test = needUpdate(booster.poolInfo(idx).gauge, idx);
+                NeedUpdate memory test = NeedUpdate(booster.poolInfo(idx).gauge, idx);
                 badGauges[counter] = test;
                 counter++;
             }
@@ -108,7 +108,7 @@ contract gaugeRegistry {
         }
     }
 
-    function updateManyGauges(needUpdate[] memory list) public {
+    function updateManyGauges(NeedUpdate[] memory list) public {
         for (uint8 idx = 0; idx < list.length; idx++) {
             updatePidForGauge(list[idx].pid,list[idx].gauge);
         }
@@ -117,7 +117,7 @@ contract gaugeRegistry {
     function removeShutdownGauge(uint8 pid) public {
         if(booster.poolInfo(pid).shutdown==true &&
         poolList[booster.poolInfo(pid).gauge].pid == pid ){
-            poolList[booster.poolInfo(pid).gauge] = gaugeDetails(0x0000000000000000000000000000000000000000,0);
+            poolList[booster.poolInfo(pid).gauge] = GaugeDetails(0x0000000000000000000000000000000000000000,0);
         } else {
             revert("gauge not shutdown or pid doesn't match");
         }
