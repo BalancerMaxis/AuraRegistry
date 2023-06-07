@@ -3,11 +3,6 @@
 pragma solidity ^0.8.18;
 
 
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./../interfaces/IMainnetGaugeFactory.sol";
-import "./../interfaces/IMainnetGauge.sol";
-import "./../interfaces/IGaugeController.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 import "./../interfaces/IBooster.sol";
 
@@ -72,7 +67,7 @@ contract gaugeRegistry {
         // check: supplied pid is greater than current stored pid for gauge
         // && the supplied gauge matches gauge derived from the stored pid
         // && check that the gauge of the new pid matches the gauge of the old pid
-        // probably don't need second check since we gauge is directly returned from booster.poolInfo in addpool
+        // probably don't need second check since the gauge is directly returned from booster.poolInfo in addpool
         if(pid > poolList[gauge].pid &&
         gauge == booster.poolInfo(poolList[gauge].pid).gauge &&
         booster.poolInfo(pid).gauge == booster.poolInfo(poolList[gauge].pid).gauge
