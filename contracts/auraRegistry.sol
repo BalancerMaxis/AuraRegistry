@@ -46,6 +46,10 @@ contract gaugeRegistry {
         return (booster.poolInfo(pid).lptoken);
     }
 
+    function getMaxPid() public view returns (uint256){
+        return (booster.poolLength() - 1);
+    }
+
     function getPidFromGauge(address gauge) public view returns (uint8){
         return (poolList[gauge].pid);
     }
@@ -99,6 +103,18 @@ contract gaugeRegistry {
         }
 
         return badGauges;
+    }
+
+    function addManyGauges(uint8[] memory pids) public {
+        for (uint8 idx = 0; idx < pids.length; idx++) {
+            addGauge(pids[idx]);
+        }
+    }
+
+    function updateManyGauges(needUpdate[] memory list) public {
+        for (uint8 idx = 0; idx < list.length; idx++) {
+            updatePidForGauge(list[idx].pid,list[idx].gauge);
+        }
     }
 
 }
